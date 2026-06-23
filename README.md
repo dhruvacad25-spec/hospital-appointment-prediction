@@ -6,6 +6,9 @@
 ---
 This project uses Machine Learning techniques to predict whether a patient is likely to miss a scheduled hospital appointment. By analyzing factors such as age, gender, appointment scheduling details, medical conditions, and SMS reminders, the model identifies patterns associated with missed appointments.
 ---
+## URL to WEBSITE 
+https://hospital-appointment-prediction.onrender.com
+---
 ## Objectives
 - Analyze patient appointment data
 - Perform data cleaning and preprocessing
