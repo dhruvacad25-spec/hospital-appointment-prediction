@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% set active_page = "about" %}
+{% block title %}About — Logic Loop-Hospital No-Show Prediction{% endblock %}
+
+{% block content %}
+
+<section class="section" style="padding-top:54px;">
+  <div class="container-narrow" style="max-width: 880px;">
+
+    <div class="section-head" data-aos="fade-up">
+      <span class="eyebrow">About This Project</span>
+      <h2>A bootcamp project built like a production tool.</h2>
+      <p>Logic Loop-Hospital No-Show Prediction started as a question: could a simple classifier, trained on ordinary appointment data, flag the visits a hospital is most likely to lose? This page walks through how it was built.</p>
+    </div>
+
+    <!-- ===== TECH STACK ===== -->
+    <div data-aos="fade-up">
+      <div class="form-section-label"><i class="bi bi-stack"></i> Tech stack</div>
+      <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom: 40px;">
+        <span class="tech-pill"><i class="bi bi-filetype-py"></i> Python</span>
+        <span class="tech-pill"><i class="bi bi-server"></i> Flask</span>
+        <span class="tech-pill"><i class="bi bi-bootstrap"></i> Bootstrap 5</span>
+        <span class="tech-pill"><i class="bi bi-diagram-3"></i> Scikit-learn</span>
+        <span class="tech-pill"><i class="bi bi-table"></i> Pandas</span>
+        <span class="tech-pill"><i class="bi bi-calculator"></i> NumPy</span>
+        <span class="tech-pill"><i class="bi bi-bar-chart"></i> Chart.js</span>
+      </div>
+    </div>
+
+    <!-- ===== DATASET ===== -->
+    <div data-aos="fade-up">
+      <div class="form-section-label"><i class="bi bi-database"></i> Dataset</div>
+      <div class="row g-4" style="margin-bottom:40px;">
+        <div class="col-md-4">
+          <div class="feature-card">
+            <div class="icon-wrap"><i class="bi bi-collection"></i></div>
+            <h3>10,000 records</h3>
+            <p>Historical hospital appointment data covering clinical, demographic, and behavioral fields.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="feature-card">
+            <div class="icon-wrap"><i class="bi bi-list-columns"></i></div>
+            <h3>25 features</h3>
+            <p>From age and BMI to booking lead time and prior missed visits.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="feature-card">
+            <div class="icon-wrap"><i class="bi bi-flag"></i></div>
+            <h3>1 target</h3>
+            <p><code>appointment_status</code> &mdash; whether the patient attended or missed the visit.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PREPROCESSING PIPELINE ===== -->
+    <div data-aos="fade-up">
+      <div class="form-section-label"><i class="bi bi-gear"></i> Preprocessing pipeline</div>
+      <div style="margin-bottom: 10px;">
+        <div class="pipeline-step">
+          <div class="step-marker">01</div>
+          <div><h4>Dropped identifiers</h4><p>The <code>patient_id</code> column was removed since it carries no predictive signal.</p></div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-marker">02</div>
+          <div><h4>Filled missing values</h4><p>Missing entries in <code>chronic_disease</code> were filled with <code>"None"</code> rather than dropped.</p></div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-marker">03</div>
+          <div><h4>Encoded categorical fields</h4><p>Label encoding was applied across all categorical columns to prepare them for the classifier.</p></div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-marker">04</div>
+          <div><h4>Split &amp; compared models</h4><p>The data was split into train/test sets, and KNN was compared against a Decision Tree classifier.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== MODEL RESULT ===== -->
+    <div class="card-glass" style="background:#fff;" data-aos="fade-up">
+      <h3 style="font-size:1.1rem; margin-bottom:14px;">Why KNN was selected</h3>
+      <p style="color:var(--text-muted); font-size:0.92rem;">Across the same train/test split, K-Nearest Neighbors outperformed a Decision Tree classifier by over 12 points, making it the final model behind every prediction on this site.</p>
+      <div class="row g-4" style="margin-top: 6px;">
+        <div class="col-sm-6">
+          <div style="font-family:var(--font-mono); font-size:1.6rem; font-weight:600; color:var(--teal);">82.65%</div>
+          <div style="font-size:0.85rem; color:var(--text-muted);">KNN Classifier accuracy</div>
+        </div>
+        <div class="col-sm-6">
+          <div style="font-family:var(--font-mono); font-size:1.6rem; font-weight:600; color:var(--text-muted);">70.55%</div>
+          <div style="font-size:0.85rem; color:var(--text-muted);">Decision Tree accuracy</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+{% endblock %}

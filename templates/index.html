@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% set active_page = "home" %}
+{% block title %}Logic Loop-Hospital No-Show Prediction{% endblock %}
+
+{% block content %}
+
+<!-- ===================== HERO ===================== -->
+<section class="hero">
+  <div class="container-narrow">
+    <div class="hero-grid">
+      <div data-aos="fade-up">
+        <span class="eyebrow">Predictive Scheduling Intelligence</span>
+        <h1>Know which appointments will <em>actually happen</em> &mdash; before the day arrives.</h1>
+        <p class="lede">Logic Loop-Hospital No-Show Predictor reads 10,000 historical visit records and learns the quiet signals &mdash; booking lead time, prior no-shows, waiting time &mdash; that separate a patient who shows up from one who doesn't.</p>
+        <div class="hero-actions">
+          <a href="{{ url_for('predict') }}" class="btn-primary-lg"><i class="bi bi-clipboard2-pulse"></i> Run a Prediction</a>
+          <a href="{{ url_for('dashboard') }}" class="btn-outline-lg" style="color:#F3F1E8; border-color: rgba(243,241,232,0.3);"><i class="bi bi-bar-chart-line"></i> View Dashboard</a>
+        </div>
+
+        <div class="hero-stats">
+          <div class="hero-stat"><div class="num">82.65%</div><div class="label">Model accuracy (KNN)</div></div>
+          <div class="hero-stat"><div class="num">10,000</div><div class="label">Appointment records</div></div>
+          <div class="hero-stat"><div class="num">25</div><div class="label">Clinical &amp; behavioral features</div></div>
+        </div>
+      </div>
+
+      <!-- Signature element: live appointment ledger -->
+      <div data-aos="fade-up" data-aos-delay="150">
+        <div class="ledger">
+          <div class="ledger-head">
+            <span class="title">Today&rsquo;s Schedule &mdash; Live Risk Read</span>
+            <span class="live-dot"><span></span> Scoring</span>
+          </div>
+
+          <div class="ledger-row" data-outcome="show">
+            <span class="slot-dot"></span>
+            <span><span class="slot-name">R. Menon</span><br><span class="slot-dept">Cardiology &middot; Follow-up</span></span>
+            <span class="slot-time">09:00</span>
+            <span class="slot-tag">Scoring&hellip;</span>
+          </div>
+          <div class="ledger-row" data-outcome="risk">
+            <span class="slot-dot"></span>
+            <span><span class="slot-name">A. Pillai</span><br><span class="slot-dept">Dermatology &middot; New patient</span></span>
+            <span class="slot-time">09:30</span>
+            <span class="slot-tag">Scoring&hellip;</span>
+          </div>
+          <div class="ledger-row" data-outcome="show">
+            <span class="slot-dot"></span>
+            <span><span class="slot-name">S. Nair</span><br><span class="slot-dept">Pediatrics &middot; Vaccination</span></span>
+            <span class="slot-time">10:15</span>
+            <span class="slot-tag">Scoring&hellip;</span>
+          </div>
+          <div class="ledger-row" data-outcome="miss">
+            <span class="slot-dot"></span>
+            <span><span class="slot-name">K. Varma</span><br><span class="slot-dept">Orthopedics &middot; Review</span></span>
+            <span class="slot-time">11:00</span>
+            <span class="slot-tag">Scoring&hellip;</span>
+          </div>
+          <div class="ledger-row" data-outcome="show">
+            <span class="slot-dot"></span>
+            <span><span class="slot-name">P. Joseph</span><br><span class="slot-dept">General Medicine</span></span>
+            <span class="slot-time">11:45</span>
+            <span class="slot-tag">Scoring&hellip;</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== WHY IT MATTERS ===================== -->
+<section class="section">
+  <div class="container-narrow">
+    <div class="section-head" data-aos="fade-up">
+      <span class="eyebrow">The Cost of an Empty Slot</span>
+      <h2>A missed appointment is never just one missed appointment.</h2>
+      <p>It's a doctor's hour with no patient, a delayed diagnosis for someone on the waiting list, and a line item that hospitals absorb quietly, again and again.</p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="0">
+        <div class="feature-card">
+          <div class="icon-wrap"><i class="bi bi-hourglass-split"></i></div>
+          <h3>Lost clinical time</h3>
+          <p>Every unattended slot is a reserved hour of specialist time that can't be recovered or reassigned on short notice.</p>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="feature-card">
+          <div class="icon-wrap"><i class="bi bi-people"></i></div>
+          <h3>Longer waiting lists</h3>
+          <p>Patients who need that same slot stay queued longer, while the original booking goes to no one.</p>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="feature-card">
+          <div class="icon-wrap"><i class="bi bi-graph-down-arrow"></i></div>
+          <h3>Compounding cost</h3>
+          <p>Across a 10,000-visit calendar, even a modest no-show rate adds up to real revenue and resourcing loss.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== HOW IT WORKS ===================== -->
+<section class="section bg-dim">
+  <div class="container-narrow">
+    <div class="row g-5">
+      <div class="col-lg-5" data-aos="fade-up">
+        <span class="eyebrow">How The Model Reads a Booking</span>
+        <h2 style="margin-top:14px;">From intake form to risk score, in four steps.</h2>
+        <p style="color:var(--text-muted); margin-top:14px;">The same pipeline that trained on 10,000 historical records runs underneath every prediction you request.</p>
+      </div>
+      <div class="col-lg-7" data-aos="fade-up" data-aos-delay="100">
+        <div class="pipeline-step">
+          <div class="step-marker">01</div>
+          <div><h4>Patient &amp; visit details are captured</h4><p>Age, BMI, department, booking lead time, and appointment history are collected from the intake form.</p></div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-marker">02</div>
+          <div><h4>Categorical fields are encoded</h4><p>Gender, department, and appointment type are label-encoded to match the format the model was trained on.</p></div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-marker">03</div>
+          <div><h4>The KNN classifier scores the visit</h4><p>The trained model compares the new booking against its nearest neighbors in the historical dataset.</p></div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-marker">04</div>
+          <div><h4>A risk read is returned instantly</h4><p>You see a clear attend / at-risk / no-show signal, with the leading contributing factors.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CTA ===================== -->
+<section class="section bg-ink">
+  <div class="container-narrow" style="text-align:center;" data-aos="zoom-in">
+    <span class="eyebrow" style="color:var(--teal-bright); justify-content:center;">Try It Now</span>
+    <h2 style="margin-top:14px; max-width:640px; margin-left:auto; margin-right:auto;">Enter one patient's details and see the model's read in seconds.</h2>
+    <div class="hero-actions" style="justify-content:center; margin-top:26px;">
+      <a href="{{ url_for('predict') }}" class="btn-primary-lg"><i class="bi bi-clipboard2-pulse"></i> Open the Prediction Form</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

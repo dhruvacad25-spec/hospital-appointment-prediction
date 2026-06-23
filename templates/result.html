@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% set active_page = "predict" %}
+{% block title %}Prediction Result — Logic Loop-Hospital No-Show Predictor{% endblock %}
+
+{% block content %}
+{#
+  Expected variables from Flask (pass these from app.py's /result route):
+    prediction      -> "show" | "risk" | "miss"   (drives banner color + icon)
+    confidence       -> integer 0-100               (drives the meter fill)
+    patient_name     -> optional string, e.g. request.form.get("name")
+    risk_factors     -> optional list of dicts: [{ "label": "...", "detail": "...", "positive": True/False }, ...]
+  Sensible fallbacks are provided below so this page renders on its own.
+#}
+{% set prediction = prediction|default("risk") %}
+{% set confidence = confidence|default(74) %}
+
+<section class="section" style="padding-top:54px;">
+  <div class="container-narrow" style="max-width: 760px;">
+
+    {% if prediction == "show" %}
+      {% set banner_class = "outcome-show" %}
+      {% set icon = "bi-check-circle" %}
+      {% set heading = "Likely to attend" %}
+      {% set sub = "This booking shows the pattern of a patient who follows through on scheduled visits." %}
+    {% elif prediction == "miss" %}
+      {% set banner_class = "outcome-miss" %}
+      {% set icon = "bi-x-circle" %}
+      {% set heading = "High risk of no-show" %}
+      {% set sub = "This booking matches the profile of patients who historically did not attend." %}
+    {% else %}
+      {% set banner_class = "outcome-risk" %}
+      {% set icon = "bi-exclamation-triangle" %}
+      {% set heading = "At risk of no-show" %}
+      {% set sub = "This booking carries some risk signals worth a confirmation call or reminder." %}
+    {% endif %}
+
+    <div class="result-banner {{ banner_class }}" data-aos="zoom-in">
+      <div class="result-icon-ring"><i class="bi {{ icon }}"></i></div>
+      <h2>{{ heading }}</h2>
+      <p>{{ sub }}</p>
+
+      <div class="confidence-meter">
+        <div class="meter-track"><div class="meter-fill" data-pct="{{ confidence }}"></div></div>
+        <div class="meter-label">
+          <span>Model confidence</span>
+          <span>{{ confidence }}%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== RISK FACTOR BREAKDOWN ===== -->
+    <div class="card-glass" style="margin-top:34px; background:#fff;" data-aos="fade-up">
+      <h3 style="font-size:1.1rem; margin-bottom:6px;">What drove this read</h3>
+      <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:6px;">The factors the model weighed most heavily for this booking.</p>
+
+      {% set risk_factors = risk_factors|default([
+        {"label": "Missed previous appointments", "detail": "Past no-shows are the strongest single signal in the model.", "positive": false},
+        {"label": "Long booking lead time", "detail": "Appointments booked far in advance see a slightly higher no-show rate.", "positive": false},
+        {"label": "Short waiting time history", "detail": "Patients with low past wait times tend to show up on time.", "positive": true},
+        {"label": "Consistent appointment history", "detail": "A steady visit pattern slightly offsets the risk above.", "positive": true}
+      ]) %}
+
+      {% for rf in risk_factors %}
+      <div class="risk-factor-row {{ 'rf-positive' if rf.positive else 'rf-negative' }}">
+        <div class="rf-icon"><i class="bi {{ 'bi-arrow-down-right' if rf.positive else 'bi-arrow-up-right' }}"></i></div>
+        <div class="rf-text">
+          <strong>{{ rf.label }}</strong>
+          <span>{{ rf.detail }}</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div style="display:flex; gap:16px; margin-top:30px; flex-wrap:wrap;" data-aos="fade-up" data-aos-delay="80">
+      <a href="{{ url_for('predict') }}" class="btn-outline-lg"><i class="bi bi-arrow-counterclockwise"></i> Run another prediction</a>
+      <a href="{{ url_for('dashboard') }}" class="btn-primary-lg"><i class="bi bi-bar-chart-line"></i> View the dashboard</a>
+    </div>
+
+  </div>
+</section>
+
+{% endblock %}
